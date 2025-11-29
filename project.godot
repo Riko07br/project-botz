@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="Project Botz"
+run/main_scene="uid://gaewdbcpu07l"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [file_customization]
 
 folder_colors={
+"res://prefabs/": "red",
 "res://scripts/": "green"
 }
 

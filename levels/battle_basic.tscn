@@ -1,12 +1,33 @@
-[gd_scene load_steps=7 format=3 uid="uid://gaewdbcpu07l"]
+[gd_scene load_steps=15 format=3 uid="uid://gaewdbcpu07l"]
 
 [ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_fb0em"]
+[ext_resource type="Script" uid="uid://cvs1ktraw8mcr" path="res://scripts/battle/Weapon.gd" id="2_3migd"]
+[ext_resource type="Script" uid="uid://dfo10yp277jbo" path="res://scripts/battle/ItemSpawner.gd" id="2_avoiw"]
+[ext_resource type="PackedScene" uid="uid://bvkf8w2tq7xor" path="res://prefabs/battle/test_projectile.tscn" id="3_avoiw"]
+[ext_resource type="PackedScene" uid="uid://c5bb5mlsrupym" path="res://prefabs/battle/test_item.tscn" id="5_ao20j"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xhqks"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3migd"]
+albedo_color = Color(0.099868774, 0.73046875, 0.15406096, 1)
+
 [sub_resource type="SphereMesh" id="SphereMesh_xhqks"]
+material = SubResource("StandardMaterial3D_3migd")
 radial_segments = 16
 rings = 8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ao20j"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tw4ae"]
+albedo_color = Color(0.453125, 0.16992188, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_osg48"]
+material = SubResource("StandardMaterial3D_tw4ae")
+radius = 0.2
+height = 0.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fb0em"]
 size = Vector3(10, 0.5, 10)
@@ -32,9 +53,51 @@ mesh = SubResource("SphereMesh_xhqks")
 skeleton = NodePath("../..")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 3.426742)
+transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 4.584515)
 
 [node name="Level" type="Node" parent="."]
+
+[node name="Weapon" type="Node3D" parent="Level" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
+transform = Transform3D(0.67968464, 0, -0.7335045, 0, 1, 0, 0.7335045, 0, 0.67968464, 5.6977673, 0.53693557, -5.632843)
+script = ExtResource("2_3migd")
+rotationTarget = NodePath("Pivot")
+rotateSpeed = 60.0
+fireRate = 1.2
+projectile = ExtResource("3_avoiw")
+spawnPoint = NodePath("Pivot/MeshInstance3D2")
+
+[node name="Pivot" type="Node3D" parent="Level/Weapon"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Weapon/Pivot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ao20j")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Level/Weapon/Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
+mesh = SubResource("SphereMesh_osg48")
+skeleton = NodePath("../..")
+
+[node name="Weapon2" type="Node3D" parent="Level" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
+transform = Transform3D(0.7920872, 0, 0.61040807, 0, 1, 0, -0.61040807, 0, 0.7920872, -5.668026, 0.53693557, -5.842473)
+script = ExtResource("2_3migd")
+rotationTarget = NodePath("Pivot")
+rotateSpeed = 30.0
+fireRate = 1.5
+projectile = ExtResource("3_avoiw")
+spawnPoint = NodePath("Pivot/MeshInstance3D2")
+
+[node name="Pivot" type="Node3D" parent="Level/Weapon2"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Weapon2/Pivot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ao20j")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Level/Weapon2/Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
+mesh = SubResource("SphereMesh_osg48")
+skeleton = NodePath("../..")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
@@ -44,6 +107,12 @@ shape = SubResource("BoxShape3D_fb0em")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level/StaticBody3D"]
 mesh = SubResource("BoxMesh_3migd")
+
+[node name="ItemSpawner" type="Node3D" parent="Level"]
+script = ExtResource("2_avoiw")
+itemScene = ExtResource("5_ao20j")
+spawnArea = Vector2(10, 10)
+metadata/_custom_type_script = "uid://dfo10yp277jbo"
 
 [node name="Lights" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
