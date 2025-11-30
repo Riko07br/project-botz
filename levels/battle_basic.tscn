@@ -1,9 +1,12 @@
-[gd_scene load_steps=15 format=3 uid="uid://gaewdbcpu07l"]
+[gd_scene load_steps=20 format=3 uid="uid://gaewdbcpu07l"]
 
 [ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_fb0em"]
 [ext_resource type="Script" uid="uid://cvs1ktraw8mcr" path="res://scripts/battle/Weapon.gd" id="2_3migd"]
 [ext_resource type="Script" uid="uid://dfo10yp277jbo" path="res://scripts/battle/ItemSpawner.gd" id="2_avoiw"]
+[ext_resource type="Script" uid="uid://w223bv3m3xmv" path="res://scripts/combat-system/Hittable.gd" id="2_osg48"]
 [ext_resource type="PackedScene" uid="uid://bvkf8w2tq7xor" path="res://prefabs/battle/test_projectile.tscn" id="3_avoiw"]
+[ext_resource type="Script" uid="uid://cg4b8s0w0oji5" path="res://scripts/player/PlayerHealth.gd" id="3_xcvhq"]
+[ext_resource type="Script" uid="uid://feid0wbq2xst" path="res://scripts/player/PlayerHealthBar.gd" id="4_xcvhq"]
 [ext_resource type="PackedScene" uid="uid://c5bb5mlsrupym" path="res://prefabs/battle/test_item.tscn" id="5_ao20j"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xhqks"]
@@ -15,6 +18,13 @@ albedo_color = Color(0.099868774, 0.73046875, 0.15406096, 1)
 material = SubResource("StandardMaterial3D_3migd")
 radial_segments = 16
 rings = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_osg48"]
+albedo_color = Color(0, 1, 0.2734375, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xcvhq"]
+material = SubResource("StandardMaterial3D_osg48")
+size = Vector3(1.2, 0.25, 0.25)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ao20j"]
 top_radius = 0.2
@@ -47,10 +57,26 @@ script = ExtResource("1_fb0em")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("SphereShape3D_xhqks")
+script = ExtResource("2_osg48")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player/CollisionShape3D"]
 mesh = SubResource("SphereMesh_xhqks")
 skeleton = NodePath("../..")
+
+[node name="Health" type="Node" parent="Player" node_paths=PackedStringArray("hittable")]
+script = ExtResource("3_xcvhq")
+hittable = NodePath("../CollisionShape3D")
+metadata/_custom_type_script = "uid://c36eh3etafqmw"
+
+[node name="HUD" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7856648, 0.6562618)
+
+[node name="HealthBar" type="MeshInstance3D" parent="Player/HUD" node_paths=PackedStringArray("health")]
+transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0, 0, 0)
+mesh = SubResource("BoxMesh_xcvhq")
+skeleton = NodePath("../..")
+script = ExtResource("4_xcvhq")
+health = NodePath("../../Health")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 4.584515)
