@@ -11,4 +11,6 @@ func _ready() -> void:
 
 func _OnHitted(hitData: Hittable.HitData) -> void:
 	TakeDamage(hitData.damage)
+	if currentHealthPoints <= 0:
+		BattleManagerInstance.ChangeState(BattleManager.BattleState.ENEMIES_WON)
 	pass

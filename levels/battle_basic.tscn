@@ -1,5 +1,6 @@
-[gd_scene load_steps=34 format=3 uid="uid://gaewdbcpu07l"]
+[gd_scene load_steps=35 format=3 uid="uid://gaewdbcpu07l"]
 
+[ext_resource type="Script" uid="uid://3pkys74mnhh3" path="res://scripts/battle/BattleFinalScreen.gd" id="1_0b4lc"]
 [ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_fb0em"]
 [ext_resource type="Script" uid="uid://cvs1ktraw8mcr" path="res://scripts/battle/Weapon.gd" id="2_3migd"]
 [ext_resource type="Script" uid="uid://dfo10yp277jbo" path="res://scripts/battle/ItemSpawner.gd" id="2_avoiw"]
@@ -86,6 +87,41 @@ material = SubResource("StandardMaterial3D_jpf0y")
 size = Vector3(5, 0.8, 0.8)
 
 [node name="BattleBasic" type="Node3D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control" node_paths=PackedStringArray("textLabel")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_0b4lc")
+textLabel = NodePath("RichTextLabel")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control/CenterContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "You Lose"
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Player" type="CharacterBody3D" parent="."]
 script = ExtResource("1_fb0em")
