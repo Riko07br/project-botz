@@ -1,15 +1,18 @@
-[gd_scene load_steps=20 format=3 uid="uid://gaewdbcpu07l"]
+[gd_scene load_steps=34 format=3 uid="uid://gaewdbcpu07l"]
 
 [ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_fb0em"]
 [ext_resource type="Script" uid="uid://cvs1ktraw8mcr" path="res://scripts/battle/Weapon.gd" id="2_3migd"]
 [ext_resource type="Script" uid="uid://dfo10yp277jbo" path="res://scripts/battle/ItemSpawner.gd" id="2_avoiw"]
+[ext_resource type="Script" uid="uid://cqlcwynu33uiq" path="res://scripts/player/PlayerWeapon.gd" id="2_kjb1o"]
 [ext_resource type="Script" uid="uid://w223bv3m3xmv" path="res://scripts/combat-system/Hittable.gd" id="2_osg48"]
 [ext_resource type="PackedScene" uid="uid://bvkf8w2tq7xor" path="res://prefabs/battle/test_projectile.tscn" id="3_avoiw"]
 [ext_resource type="Script" uid="uid://cg4b8s0w0oji5" path="res://scripts/player/PlayerHealth.gd" id="3_xcvhq"]
-[ext_resource type="Script" uid="uid://feid0wbq2xst" path="res://scripts/player/PlayerHealthBar.gd" id="4_xcvhq"]
+[ext_resource type="Script" uid="uid://feid0wbq2xst" path="res://scripts/battle/HealthBar.gd" id="4_xcvhq"]
 [ext_resource type="PackedScene" uid="uid://c5bb5mlsrupym" path="res://prefabs/battle/test_item.tscn" id="5_ao20j"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_xhqks"]
+[ext_resource type="PackedScene" uid="uid://dtpnx6m8b5wkg" path="res://prefabs/battle/test_item_left.tscn" id="8_jpf0y"]
+[ext_resource type="PackedScene" uid="uid://cb50dx8cpddj1" path="res://prefabs/battle/test_item_right.tscn" id="9_m7ced"]
+[ext_resource type="Script" uid="uid://c36eh3etafqmw" path="res://scripts/battle/Health.gd" id="9_uw7rx"]
+[ext_resource type="Script" uid="uid://qkhw282eyhpb" path="res://scripts/battle/Enemy.gd" id="10_m7ced"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3migd"]
 albedo_color = Color(0.099868774, 0.73046875, 0.15406096, 1)
@@ -19,12 +22,38 @@ material = SubResource("StandardMaterial3D_3migd")
 radial_segments = 16
 rings = 8
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xcvhq"]
+albedo_color = Color(0.94921875, 0.7564087, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_uw7rx"]
+material = SubResource("StandardMaterial3D_xcvhq")
+size = Vector3(0.5, 0.91, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjb1o"]
+albedo_color = Color(0, 0.08155637, 0.9490196, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_g64tq"]
+material = SubResource("StandardMaterial3D_kjb1o")
+size = Vector3(0.5, 0.91, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xhqks"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_osg48"]
 albedo_color = Color(0, 1, 0.2734375, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xcvhq"]
 material = SubResource("StandardMaterial3D_osg48")
 size = Vector3(1.2, 0.25, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fb0em"]
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1akbc"]
+albedo_color = Color(0.57421875, 0.12517226, 0.11439514, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3migd"]
+material = SubResource("StandardMaterial3D_1akbc")
+size = Vector3(10, 0.5, 10)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ao20j"]
 top_radius = 0.2
@@ -39,29 +68,49 @@ material = SubResource("StandardMaterial3D_tw4ae")
 radius = 0.2
 height = 0.4
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_fb0em"]
-size = Vector3(10, 0.5, 10)
+[sub_resource type="BoxMesh" id="BoxMesh_uw7rx"]
+size = Vector3(3.5, 2, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1akbc"]
-albedo_color = Color(0.57421875, 0.12517226, 0.11439514, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g64tq"]
+albedo_color = Color(0.89453125, 0, 0, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_3migd"]
-material = SubResource("StandardMaterial3D_1akbc")
-size = Vector3(10, 0.5, 10)
+[sub_resource type="BoxMesh" id="BoxMesh_jpf0y"]
+material = SubResource("StandardMaterial3D_g64tq")
+size = Vector3(1.325, 0.48, 0.81)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jpf0y"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_m7ced"]
+material = SubResource("StandardMaterial3D_jpf0y")
+size = Vector3(5, 0.8, 0.8)
 
 [node name="BattleBasic" type="Node3D"]
 
 [node name="Player" type="CharacterBody3D" parent="."]
 script = ExtResource("1_fb0em")
 
+[node name="PlayerModel" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("SphereMesh_xhqks")
+
+[node name="LeftWeapon" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.7, 0.786, -0.172)
+mesh = SubResource("PrismMesh_uw7rx")
+skeleton = NodePath("../HUD")
+script = ExtResource("2_kjb1o")
+
+[node name="RightWeapon" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.7, 0.786, -0.172)
+mesh = SubResource("PrismMesh_g64tq")
+skeleton = NodePath("../HUD")
+script = ExtResource("2_kjb1o")
+damage = 20
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("SphereShape3D_xhqks")
 script = ExtResource("2_osg48")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/CollisionShape3D"]
-mesh = SubResource("SphereMesh_xhqks")
-skeleton = NodePath("../..")
 
 [node name="Health" type="Node" parent="Player" node_paths=PackedStringArray("hittable")]
 script = ExtResource("3_xcvhq")
@@ -79,51 +128,19 @@ script = ExtResource("4_xcvhq")
 health = NodePath("../../Health")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 4.584515)
+transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 2.7876716)
+
+[node name="ItemSpawner" type="Node3D" parent="."]
+script = ExtResource("2_avoiw")
+itemScene = ExtResource("5_ao20j")
+pickups = Dictionary[PackedScene, float]({
+ExtResource("8_jpf0y"): 0.8,
+ExtResource("9_m7ced"): 0.5
+})
+spawnArea = Vector2(10, 10)
+metadata/_custom_type_script = "uid://dfo10yp277jbo"
 
 [node name="Level" type="Node" parent="."]
-
-[node name="Weapon" type="Node3D" parent="Level" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
-transform = Transform3D(0.67968464, 0, -0.7335045, 0, 1, 0, 0.7335045, 0, 0.67968464, 5.6977673, 0.53693557, -5.632843)
-script = ExtResource("2_3migd")
-rotationTarget = NodePath("Pivot")
-rotateSpeed = 60.0
-fireRate = 1.2
-projectile = ExtResource("3_avoiw")
-spawnPoint = NodePath("Pivot/MeshInstance3D2")
-
-[node name="Pivot" type="Node3D" parent="Level/Weapon"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Weapon/Pivot"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-mesh = SubResource("CylinderMesh_ao20j")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Level/Weapon/Pivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
-mesh = SubResource("SphereMesh_osg48")
-skeleton = NodePath("../..")
-
-[node name="Weapon2" type="Node3D" parent="Level" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
-transform = Transform3D(0.7920872, 0, 0.61040807, 0, 1, 0, -0.61040807, 0, 0.7920872, -5.668026, 0.53693557, -5.842473)
-script = ExtResource("2_3migd")
-rotationTarget = NodePath("Pivot")
-rotateSpeed = 30.0
-fireRate = 1.5
-projectile = ExtResource("3_avoiw")
-spawnPoint = NodePath("Pivot/MeshInstance3D2")
-
-[node name="Pivot" type="Node3D" parent="Level/Weapon2"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Weapon2/Pivot"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
-mesh = SubResource("CylinderMesh_ao20j")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Level/Weapon2/Pivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
-mesh = SubResource("SphereMesh_osg48")
-skeleton = NodePath("../..")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
@@ -134,14 +151,79 @@ shape = SubResource("BoxShape3D_fb0em")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level/StaticBody3D"]
 mesh = SubResource("BoxMesh_3migd")
 
-[node name="ItemSpawner" type="Node3D" parent="Level"]
-script = ExtResource("2_avoiw")
-itemScene = ExtResource("5_ao20j")
-spawnArea = Vector2(10, 10)
-metadata/_custom_type_script = "uid://dfo10yp277jbo"
-
 [node name="Lights" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+
+[node name="Enemy" type="Node3D" parent="."]
+script = ExtResource("10_m7ced")
+
+[node name="Health" type="Node" parent="Enemy"]
+script = ExtResource("9_uw7rx")
+maxHealthPoints = 25
+metadata/_custom_type_script = "uid://c36eh3etafqmw"
+
+[node name="Weapon" type="Node3D" parent="Enemy" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
+transform = Transform3D(0.67968464, 0, -0.7335045, 0, 1, 0, 0.7335045, 0, 0.67968464, 5.6977673, 0.53693557, -5.632843)
+script = ExtResource("2_3migd")
+rotationTarget = NodePath("Pivot")
+rotateSpeed = 60.0
+fireRate = 1.2
+projectile = ExtResource("3_avoiw")
+spawnPoint = NodePath("Pivot/MeshInstance3D2")
+
+[node name="Pivot" type="Node3D" parent="Enemy/Weapon"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy/Weapon/Pivot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ao20j")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Enemy/Weapon/Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
+mesh = SubResource("SphereMesh_osg48")
+skeleton = NodePath("../..")
+
+[node name="Weapon2" type="Node3D" parent="Enemy" node_paths=PackedStringArray("rotationTarget", "spawnPoint")]
+transform = Transform3D(0.7920872, 0, 0.61040807, 0, 1, 0, -0.61040807, 0, 0.7920872, -5.668026, 0.53693557, -5.842473)
+script = ExtResource("2_3migd")
+rotationTarget = NodePath("Pivot")
+rotateSpeed = 30.0
+fireRate = 1.5
+projectile = ExtResource("3_avoiw")
+spawnPoint = NodePath("Pivot/MeshInstance3D2")
+
+[node name="Pivot" type="Node3D" parent="Enemy/Weapon2"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy/Weapon2/Pivot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ao20j")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Enemy/Weapon2/Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.596)
+mesh = SubResource("SphereMesh_osg48")
+skeleton = NodePath("../..")
+
+[node name="EnemyModel" type="MeshInstance3D" parent="Enemy"]
+transform = Transform3D(1, 0, 0, 0, 0.8967569, 0.44252348, 0, -0.44252348, 0.8967569, 0, 1.6508875, -6.520507)
+mesh = SubResource("BoxMesh_uw7rx")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Enemy/EnemyModel"]
+transform = Transform3D(0.87021816, 0.49266654, -1.2748709e-08, -0.4926665, 0.8702181, 0, 0, 0, 1, -0.8236406, 0.20468473, 0.6616359)
+mesh = SubResource("BoxMesh_jpf0y")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Enemy/EnemyModel"]
+transform = Transform3D(0.8703556, -0.49242353, 0, 0.49242342, 0.87035537, 0.0006108582, -0.00030079484, -0.00053167343, 0.99999976, 0.824, 0.2046299, 0.6621299)
+mesh = SubResource("BoxMesh_jpf0y")
+skeleton = NodePath("../..")
+
+[node name="HealthBar" type="MeshInstance3D" parent="Enemy" node_paths=PackedStringArray("health")]
+transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0, 3.365007, -7.9274125)
+mesh = SubResource("BoxMesh_m7ced")
+skeleton = NodePath("../..")
+script = ExtResource("4_xcvhq")
+health = NodePath("../Health")

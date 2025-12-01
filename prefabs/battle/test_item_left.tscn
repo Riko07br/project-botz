@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://c5bb5mlsrupym"]
+[gd_scene load_steps=5 format=3 uid="uid://dtpnx6m8b5wkg"]
 
-[ext_resource type="Script" uid="uid://qks8wc2u064h" path="res://scripts/battle/Pickup.gd" id="1_d5s78"]
+[ext_resource type="Script" uid="uid://5gi16l6483g1" path="res://scripts/battle/pickups/AttackPickup.gd" id="1_yh0cr"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_tw4ae"]
 radius = 0.4
@@ -15,7 +15,8 @@ size = Vector3(0.5, 0.5, 0.5)
 [node name="TestItem" type="Area3D"]
 collision_layer = 0
 monitorable = false
-script = ExtResource("1_d5s78")
+script = ExtResource("1_yh0cr")
+attackSide = 1
 metadata/_custom_type_script = "uid://qks8wc2u064h"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

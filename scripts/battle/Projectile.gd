@@ -1,6 +1,7 @@
 class_name Projectile
 extends ShapeCast3D
 
+@export var damage: int = 5
 @export var moveSpeed: float = 20
 @export var maxFlyingTime: float = 2
 
@@ -21,7 +22,7 @@ func _ready() -> void:
 	max_results = 1
 
 	_sphereOffset = shape.radius
-	_cachedHitData = Hittable.HitData.new(5)
+	_cachedHitData = Hittable.HitData.new(damage)
 
 func _physics_process(delta: float) -> void:
 	_flyingTime += delta

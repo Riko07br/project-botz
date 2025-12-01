@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var health: PlayerHealth
+@export var health: Health
 
 
 func _ready() -> void:
