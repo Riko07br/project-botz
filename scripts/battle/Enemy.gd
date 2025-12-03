@@ -12,6 +12,4 @@ func _ready() -> void:
 func _OnHealthChanged() -> void:
 	if health.currentHealthPoints <= 0:
 		BattleManagerInstance.UnregisterEnemy(self)
-		if BattleManagerInstance.enemies.size() == 0:
-			BattleManagerInstance.ChangeState(BattleManager.BattleState.PLAYER_WON)
 	pass

@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://gaewdbcpu07l"]
+[gd_scene load_steps=34 format=3 uid="uid://gaewdbcpu07l"]
 
 [ext_resource type="Script" uid="uid://3pkys74mnhh3" path="res://scripts/battle/BattleFinalScreen.gd" id="1_0b4lc"]
 [ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_fb0em"]
@@ -9,41 +9,40 @@
 [ext_resource type="PackedScene" uid="uid://bvkf8w2tq7xor" path="res://prefabs/battle/test_projectile.tscn" id="3_avoiw"]
 [ext_resource type="Script" uid="uid://cg4b8s0w0oji5" path="res://scripts/player/PlayerHealth.gd" id="3_xcvhq"]
 [ext_resource type="Script" uid="uid://feid0wbq2xst" path="res://scripts/battle/HealthBar.gd" id="4_xcvhq"]
-[ext_resource type="PackedScene" uid="uid://c5bb5mlsrupym" path="res://prefabs/battle/test_item.tscn" id="5_ao20j"]
 [ext_resource type="PackedScene" uid="uid://dtpnx6m8b5wkg" path="res://prefabs/battle/test_item_left.tscn" id="8_jpf0y"]
 [ext_resource type="PackedScene" uid="uid://cb50dx8cpddj1" path="res://prefabs/battle/test_item_right.tscn" id="9_m7ced"]
 [ext_resource type="Script" uid="uid://c36eh3etafqmw" path="res://scripts/battle/Health.gd" id="9_uw7rx"]
 [ext_resource type="Script" uid="uid://qkhw282eyhpb" path="res://scripts/battle/Enemy.gd" id="10_m7ced"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3migd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m7ced"]
 albedo_color = Color(0.099868774, 0.73046875, 0.15406096, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_xhqks"]
-material = SubResource("StandardMaterial3D_3migd")
+material = SubResource("StandardMaterial3D_m7ced")
 radial_segments = 16
 rings = 8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xcvhq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0b4lc"]
 albedo_color = Color(0.94921875, 0.7564087, 0, 1)
 
 [sub_resource type="PrismMesh" id="PrismMesh_uw7rx"]
-material = SubResource("StandardMaterial3D_xcvhq")
+material = SubResource("StandardMaterial3D_0b4lc")
 size = Vector3(0.5, 0.91, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjb1o"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ay37"]
 albedo_color = Color(0, 0.08155637, 0.9490196, 1)
 
 [sub_resource type="PrismMesh" id="PrismMesh_g64tq"]
-material = SubResource("StandardMaterial3D_kjb1o")
+material = SubResource("StandardMaterial3D_8ay37")
 size = Vector3(0.5, 0.91, 0.5)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xhqks"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_osg48"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xs8m3"]
 albedo_color = Color(0, 1, 0.2734375, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xcvhq"]
-material = SubResource("StandardMaterial3D_osg48")
+material = SubResource("StandardMaterial3D_xs8m3")
 size = Vector3(1.2, 0.25, 0.25)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fb0em"]
@@ -99,7 +98,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control" node_paths=PackedStringArray("textLabel")]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control" node_paths=PackedStringArray("textLabel", "backToWorldButton", "quitButton")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -108,9 +107,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_0b4lc")
-textLabel = NodePath("RichTextLabel")
+textLabel = NodePath("VBoxContainer/RichTextLabel")
+backToWorldButton = NodePath("VBoxContainer/HBoxContainer/WorldButton")
+quitButton = NodePath("VBoxContainer/HBoxContainer/QuitButton")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/CenterContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
 clip_contents = false
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
@@ -123,8 +128,25 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/CenterContainer/VBoxContainer"]
+process_mode = 3
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+
+[node name="WorldButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back 
+to world"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/Control/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
 [node name="Player" type="CharacterBody3D" parent="."]
 script = ExtResource("1_fb0em")
+goToLastPositionOnStart = false
 
 [node name="PlayerModel" type="MeshInstance3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -168,12 +190,12 @@ transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39
 
 [node name="ItemSpawner" type="Node3D" parent="."]
 script = ExtResource("2_avoiw")
-itemScene = ExtResource("5_ao20j")
-pickups = Dictionary[PackedScene, float]({
+itemsToSpawn = Dictionary[PackedScene, float]({
 ExtResource("8_jpf0y"): 0.8,
 ExtResource("9_m7ced"): 0.5
 })
 spawnArea = Vector2(10, 10)
+spawnDistanceFromPlayer = 3.0
 metadata/_custom_type_script = "uid://dfo10yp277jbo"
 
 [node name="Level" type="Node" parent="."]

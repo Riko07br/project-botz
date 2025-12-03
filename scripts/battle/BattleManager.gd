@@ -20,6 +20,8 @@ func RegisterEnemy(enemy: Enemy) -> void:
 func UnregisterEnemy(enemy: Enemy) -> void:
 	print("Unregistering enemy: " + enemy.name)
 	enemies.erase(enemy)
+	if enemies.size() == 0:
+		ChangeState(BattleState.PLAYER_WON)
 	pass
 
 func ClearEnemies() -> void:
@@ -30,23 +32,16 @@ func ClearEnemies() -> void:
 func ChangeState(newState: BattleState) -> void:
 	state = newState
 
-	match state:
-		BattleState.PLAYER_WON:
-			get_tree().paused = true
-		BattleState.ENEMIES_WON:
-			get_tree().paused = true
-		BattleState.IN_PROGRESS:
-			get_tree().paused = false
+	get_tree().paused = state != BattleState.IN_PROGRESS
 
 	BattleStateChanged.emit(state)
 	pass
 
 func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
-	get_tree().set_deferred("paused", true)
 	pass
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause_battle"):
+	if event.is_action_pressed("pause_battle") and state != BattleState.ENEMIES_WON:
 		get_tree().paused = not get_tree().paused
 	pass

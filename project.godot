@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Project Botz"
-config/version="0.0.1-0"
-run/main_scene="uid://gaewdbcpu07l"
+config/version="0.0.2-0"
+run/main_scene="uid://b73mx78at0wo2"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
+GameManagerInstance="*res://scripts/GameManager.gd"
 BattleManagerInstance="*res://scripts/battle/BattleManager.gd"
 
 [file_customization]

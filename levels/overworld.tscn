@@ -1,0 +1,115 @@
+[gd_scene load_steps=21 format=3 uid="uid://b73mx78at0wo2"]
+
+[ext_resource type="Script" uid="uid://cj3n4y32vbq7l" path="res://scripts/player/PlayerController.gd" id="1_5848w"]
+[ext_resource type="Script" uid="uid://cqlcwynu33uiq" path="res://scripts/player/PlayerWeapon.gd" id="2_o8rqw"]
+[ext_resource type="Script" uid="uid://w223bv3m3xmv" path="res://scripts/combat-system/Hittable.gd" id="3_dwypl"]
+[ext_resource type="Script" uid="uid://cg4b8s0w0oji5" path="res://scripts/player/PlayerHealth.gd" id="4_n7mjo"]
+[ext_resource type="Script" uid="uid://feid0wbq2xst" path="res://scripts/battle/HealthBar.gd" id="5_r0i1i"]
+[ext_resource type="Texture2D" uid="uid://7my3no11bcgp" path="res://dev/top-down-city.png" id="6_ehwj1"]
+[ext_resource type="Script" uid="uid://ba31sxotkox3g" path="res://scripts/player/CameraFollow.gd" id="6_o8rqw"]
+[ext_resource type="Script" uid="uid://dfo10yp277jbo" path="res://scripts/battle/ItemSpawner.gd" id="8_r0i1i"]
+[ext_resource type="PackedScene" uid="uid://bbj508gl3fj03" path="res://prefabs/battle/test_item_battle.tscn" id="9_n7mjo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3migd"]
+albedo_color = Color(0.099868774, 0.73046875, 0.15406096, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_3ehj1"]
+material = SubResource("StandardMaterial3D_3migd")
+radial_segments = 16
+rings = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xcvhq"]
+albedo_color = Color(0.94921875, 0.7564087, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_2nhnn"]
+material = SubResource("StandardMaterial3D_xcvhq")
+size = Vector3(0.5, 0.91, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjb1o"]
+albedo_color = Color(0, 0.08155637, 0.9490196, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_5vrew"]
+material = SubResource("StandardMaterial3D_kjb1o")
+size = Vector3(0.5, 0.91, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1rjbp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_osg48"]
+albedo_color = Color(0, 1, 0.2734375, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8tf8p"]
+material = SubResource("StandardMaterial3D_osg48")
+size = Vector3(1.2, 0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvkex"]
+albedo_texture = ExtResource("6_ehwj1")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qyxw2"]
+material = SubResource("StandardMaterial3D_dvkex")
+
+[node name="Overworld" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("1_5848w")
+
+[node name="PlayerModel" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("SphereMesh_3ehj1")
+
+[node name="LeftWeapon" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.7, 0.786, -0.172)
+mesh = SubResource("PrismMesh_2nhnn")
+skeleton = NodePath("../HUD")
+script = ExtResource("2_o8rqw")
+
+[node name="RightWeapon" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.7, 0.786, -0.172)
+mesh = SubResource("PrismMesh_5vrew")
+skeleton = NodePath("../HUD")
+script = ExtResource("2_o8rqw")
+damage = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_1rjbp")
+script = ExtResource("3_dwypl")
+
+[node name="Health" type="Node" parent="Player" node_paths=PackedStringArray("hittable")]
+script = ExtResource("4_n7mjo")
+hittable = NodePath("../CollisionShape3D")
+metadata/_custom_type_script = "uid://c36eh3etafqmw"
+
+[node name="HUD" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7856648, 0.6562618)
+
+[node name="HealthBar" type="MeshInstance3D" parent="Player/HUD" node_paths=PackedStringArray("health")]
+transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0, 0, 0)
+mesh = SubResource("BoxMesh_8tf8p")
+skeleton = NodePath("../..")
+script = ExtResource("5_r0i1i")
+health = NodePath("../../Health")
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, 0.39850894, 0.91716444, 0, -0.91716444, 0.39850894, 0, 10.116251, 2.7876716)
+script = ExtResource("6_o8rqw")
+target = NodePath("../Player")
+offset = Vector3(0, 10, 2.8)
+
+[node name="Lights" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+mesh = SubResource("PlaneMesh_qyxw2")
+
+[node name="ItemSpawner" type="Node3D" parent="."]
+script = ExtResource("8_r0i1i")
+itemsToSpawn = Dictionary[PackedScene, float]({
+ExtResource("9_n7mjo"): 0.7
+})
+spawnArea = Vector2(16, 16)
+spawnDistanceFromPlayer = 3.5
+metadata/_custom_type_script = "uid://dfo10yp277jbo"

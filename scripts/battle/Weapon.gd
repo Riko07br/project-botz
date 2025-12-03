@@ -32,9 +32,7 @@ func ShootProjectile(delta: float) -> void:
 		return
 	timer = 0
 
-	var newProjectile: Node3D = projectile.instantiate()
-
-	get_tree().root.add_child(newProjectile)
+	var newProjectile: Node3D = GameManagerInstance.InstantiateBoundToScene(projectile, "Projectiles")
 	newProjectile.global_position = spawnPoint.global_position
 	newProjectile.global_rotation = spawnPoint.global_rotation
 	pass

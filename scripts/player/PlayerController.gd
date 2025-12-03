@@ -1,6 +1,8 @@
 class_name PlayerController
 extends CharacterBody3D
 
+@export var goToLastPositionOnStart: bool = true
+
 @export var movementSpeed: float = 6
 @export_range(.4, 1) var speedDamp: float = .85
 @export_range(.4, 1) var noInputSpeedDamp: float = .9
@@ -18,6 +20,11 @@ func GetMovementDirection():
 	planeVelocity = planeVelocity.move_toward(inputWithVelocity, speedDelta);
 
 	return planeVelocity
+
+func _ready() -> void:
+	if goToLastPositionOnStart and GameManagerInstance.lastPlayerPosition != null:
+		global_position = GameManagerInstance.lastPlayerPosition
+	pass
 
 func _physics_process(_delta: float) -> void:
 	var newDirection = GetMovementDirection()
